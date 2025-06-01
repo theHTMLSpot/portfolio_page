@@ -1,0 +1,23 @@
+[
+  {
+    "title": "HouseNestAi",
+    "description": "An ai powered house comparison and searching tool for homebuyers and sellers.",
+    "image": "/images/HouseNestAi.png",
+    "inProgress": true,
+    "link": "https://github.com/theHTMLspot/HouseNestAi"
+  },
+  {
+    "title": "Script Space",
+    "description": "The frontend for my notion template company 'script space'",
+    "image": "/images/ScriptSpace.png",
+    "inProgress": false,
+    "link": "https://script-space.vercel.app/"
+  },
+  {
+    "title": "ToDo cli in C#",
+    "description": "A command line interface for a todo list",
+    "image": "/images/ToDo.png",
+    "inProgress": false,
+    "link": "https://github.com/theHTMLspot/ToDocs"
+  }
+]
