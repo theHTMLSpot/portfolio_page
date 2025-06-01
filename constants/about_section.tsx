@@ -5,7 +5,7 @@ import React from "react";
 export default function AboutSection() {
   return (
     <Container className="m-10 grid grid-cols-2 p-20 pb-40">
-      <Container className="flex flex-col items-start justify-center w-full h-full">
+      <Container className="flex h-full w-full flex-col items-start justify-center">
         <Title level={1} className="my-10">
           Who Am I
         </Title>
@@ -29,17 +29,17 @@ export default function AboutSection() {
           Read More{" "}
         </Link>
       </Container>
-      <Container className="flex items-center justify-end w-full h-full">
-      <Image
-        src="/images/ethan.jpeg"
-        alt="Ethan Lagden"
-        width={500}
-        height={500}
-        className="w-[50%] rounded-full "
-        priority
-        aria-hidden="true"
-    />
-    </Container>
+      <Container className="flex h-full w-full items-center justify-end">
+        <Image
+          src="/images/ethan.jpeg"
+          alt="Ethan Lagden"
+          width={500}
+          height={500}
+          className="w-[50%] rounded-full"
+          priority
+          aria-hidden="true"
+        />
+      </Container>
     </Container>
   );
 }

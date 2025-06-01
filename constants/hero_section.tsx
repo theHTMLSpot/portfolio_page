@@ -46,7 +46,7 @@ export default function HeroSection() {
     <>
       <Container className="relative -z-10 flex min-h-screen items-center justify-between gap-10">
         <BackgroundImage />
-        <div className="absolute top-0 left-0 -z-10 h-full w-full bg-gradient-to-t from-black to-transparent" />
+        <div className="absolute top-0 left-0 -z-10 h-full w-full bg-gradient-to-t from-[#0b0a0b] to-transparent" />
         <Container className="z-30 flex flex-col gap-2 p-20">
           <Paragraph>Hi!. My name is</Paragraph>
           <Title level={5} className="text-foreground text-xl font-light">
