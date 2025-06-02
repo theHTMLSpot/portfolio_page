@@ -5,10 +5,14 @@ import { Title, Container } from "@/components/components";
 import InputWithHoverLabel from "@/components/input_with_hover_label";
 import { contactForm } from "@/types/contact_form";
 import Lottie, { LottieRefCurrentProps } from "lottie-react";
-import contactAnimation from "@/animations/contact.json"
+import contactAnimation from "@/animations/contact.json";
+import { form } from "motion/react-client";
 
 export default function ContactPage() {
   const lottieRef = useRef<LottieRefCurrentProps>(null);
+  const [showAnim, setShowAnim] = useState(false);
+
+  
 
   const [formData, setFormData] = useState<contactForm>({
     firstName: "",
@@ -18,33 +22,99 @@ export default function ContactPage() {
     message: "",
   });
 
+  const [formErrors, setFormErrors] = useState<contactForm>({
+    firstName: "",
+    lastName: "",
+    email: "",
+    subject: "",
+    message: "",
+  });
+
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const { name, value } = e.target;
+
+    if (value === "") {
+      setFormErrors({
+        ...formErrors,
+        [name]: `${name} can't be blank`,
+      });
+    } else {
+      setFormErrors({
+        ...formErrors,
+        [name]: "",
+      });
+    }
+
     setFormData({
       ...formData,
-      [e.target.name]: e.target.value,
+      [name]: value,
     });
   };
 
-  const handleSubmit = () => {
-    if (lottieRef.current) {
-      lottieRef.current.play
+  const handleSubmit = (e: React.FormEvent<HTMLButtonElement>) => {
+    e.preventDefault();
+
+    if (lottieRef.current?.animationItem) {
+      const newErrors: contactForm = {
+          firstName: "",
+          lastName: "",
+          email: "",
+          subject: "",
+          message: "",
+        };
+
+        let hasErrors = false;
+
+        for (const key in formData) {
+          if (formData[key as keyof contactForm].trim() === "") {
+            newErrors[key as keyof contactForm] = `${key} can't be blank`;
+            hasErrors = true;
+          }
+        }
+
+        if (hasErrors) {
+          setFormErrors(newErrors);
+          return; // Exit early if there are validation errors
+        }
+      setShowAnim(true);
+      const anim = lottieRef.current.animationItem;
+
+      anim.play();
+
+      const onComplete = () => {
+        
+        const submit = document.getElementById("submit");
+        if (submit) submit.innerText = "Thanks For The Message"
+        
+
+        
+
+        // TODO: add api endpoint to send message with resend.
+
+        console.log(formData);
+
+        setFormData({
+          firstName: "",
+          lastName: "",
+          email: "",
+          subject: "",
+          message: "",
+        });
+
+        setShowAnim(false);
+
+        anim.removeEventListener("complete", onComplete);
+      };
+
+      anim.addEventListener("complete", onComplete);
     }
-    console.log(formData);
-    setFormData({
-      firstName: "",
-      lastName: "",
-      email: "",
-      subject: "",
-      message: "",
-    });
   };
 
   useEffect(() => {
-      if (lottieRef.current) {
-        lottieRef.current.goToAndStop(0, true);
-      }
-    }, []);
-  
+    if (lottieRef.current?.animationItem) {
+      lottieRef.current.animationItem.goToAndStop(0, true);
+    }
+  }, []);
 
   return (
     <Container className="my-40 flex w-screen flex-col items-center justify-center">
@@ -62,6 +132,9 @@ export default function ContactPage() {
                 value={formData.firstName}
                 onChange={handleChange}
               />
+              {formErrors.firstName && (
+                <span className="text-red-700">{formErrors.firstName}</span>
+              )}
             </div>
             <div className="h-[50%] w-full">
               <InputWithHoverLabel
@@ -71,44 +144,63 @@ export default function ContactPage() {
                 value={formData.lastName}
                 onChange={handleChange}
               />
+              {formErrors.lastName && (
+                <span className="text-red-700">{formErrors.lastName}</span>
+              )}
             </div>
           </Container>
-          <InputWithHoverLabel
-            name="email"
-            label="Email"
-            type="email"
-            value={formData.email}
-            onChange={handleChange}
-          />
-          <InputWithHoverLabel
-            name="subject"
-            label="Subject"
-            type="text"
-            value={formData.subject}
-            onChange={handleChange}
-          />
-          <InputWithHoverLabel
-            name="message"
-            label="Message"
-            type="text"
-            value={formData.message}
-            onChange={handleChange}
-          />
+          <div>
+            <InputWithHoverLabel
+              name="email"
+              label="Email"
+              type="email"
+              value={formData.email}
+              onChange={handleChange}
+            />
+            {formErrors.email && (
+              <span className="text-red-700">{formErrors.email}</span>
+            )}
+          </div>
+          <div>
+            <InputWithHoverLabel
+              name="subject"
+              label="Subject"
+              type="text"
+              value={formData.subject}
+              onChange={handleChange}
+            />
+            {formErrors.subject && (
+              <span className="text-red-700">{formErrors.subject}</span>
+            )}
+          </div>
+          <div>
+            <InputWithHoverLabel
+              name="message"
+              label="Message"
+              type="text"
+              value={formData.message}
+              onChange={handleChange}
+            />
+            {formErrors.message && (
+              <span className="text-red-700">{formErrors.message}</span>
+            )}
+          </div>
+
           <button
             type="submit"
-            className="relative text-foreground relative my-5 h-auto w-full rounded-md bg-teal-600 px-4 py-2 hover:bg-teal-500"
+            className="relative text-foreground relative my-5 h-auto w-full rounded-md bg-teal-600 py-5 hover:bg-teal-500"
             onClick={handleSubmit}
+            id="submit"
           >
-            
             Submit
             <Lottie
-                lottieRef={lottieRef}
-                className="absolute bottom-2 right-1"
-                animationData={contactAnimation}
-                loop={false}
-                autoplay={false}
-                style={{ height: 32, width: 32 }}
-              />
+              lottieRef={lottieRef}
+              className="absolute bottom-2 right-5"
+              animationData={contactAnimation}
+              loop={false}
+              autoplay={false}
+              style={showAnim ? { height: 78, width: 79 } : { height: 0, width: 0 }}
+            />
           </button>
         </form>
       </Container>
