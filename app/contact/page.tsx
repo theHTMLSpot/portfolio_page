@@ -1,11 +1,15 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useRef, useEffect } from "react";
 import { Title, Container } from "@/components/components";
 import InputWithHoverLabel from "@/components/input_with_hover_label";
 import { contactForm } from "@/types/contact_form";
+import Lottie, { LottieRefCurrentProps } from "lottie-react";
+import contactAnimation from "@/animations/contact.json"
 
 export default function ContactPage() {
+  const lottieRef = useRef<LottieRefCurrentProps>(null);
+
   const [formData, setFormData] = useState<contactForm>({
     firstName: "",
     lastName: "",
@@ -22,6 +26,9 @@ export default function ContactPage() {
   };
 
   const handleSubmit = () => {
+    if (lottieRef.current) {
+      lottieRef.current.play
+    }
     console.log(formData);
     setFormData({
       firstName: "",
@@ -31,6 +38,13 @@ export default function ContactPage() {
       message: "",
     });
   };
+
+  useEffect(() => {
+      if (lottieRef.current) {
+        lottieRef.current.goToAndStop(0, true);
+      }
+    }, []);
+  
 
   return (
     <Container className="my-40 flex w-screen flex-col items-center justify-center">
@@ -82,11 +96,19 @@ export default function ContactPage() {
           />
           <button
             type="submit"
-            className="text-foreground relative my-5 h-auto w-full max-w-md rounded-md bg-teal-600 px-4 py-2 hover:bg-teal-500"
+            className="relative text-foreground relative my-5 h-auto w-full rounded-md bg-teal-600 px-4 py-2 hover:bg-teal-500"
             onClick={handleSubmit}
           >
             
             Submit
+            <Lottie
+                lottieRef={lottieRef}
+                className="absolute bottom-2 right-1"
+                animationData={contactAnimation}
+                loop={false}
+                autoplay={false}
+                style={{ height: 32, width: 32 }}
+              />
           </button>
         </form>
       </Container>
