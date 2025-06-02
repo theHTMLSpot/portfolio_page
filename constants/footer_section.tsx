@@ -3,7 +3,7 @@ import React from "react";
 
 export default function FooterSection() {
   return (
-    <Container className="grid place-items-center border-t border-gray-600 p-10">
+    <Container className="grid place-items-center border-t border-gray-600 bg-black p-10">
       <p>Copyright &copy; 2023</p>
       <Container className="grid w-screen grid-cols-2 place-items-center gap-4 bg-black p-10">
         <Container className="flex flex-col items-baseline gap-2">

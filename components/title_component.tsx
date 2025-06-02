@@ -11,7 +11,7 @@ export default function TitleComponent({
   return React.createElement(
     Tag,
     {
-      className: `w-full max-w-xl py-1 text-foreground text-3xl sm:text-4xl md:text-5xl lg:text-6xl ${className}`,
+      className: `w-full max-w-xl py-1 text-foreground ${className}`,
     },
     children,
   );

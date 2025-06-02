@@ -3,7 +3,8 @@
 import { useEffect, useRef, useState } from "react";
 import { Container, Link } from "@/components/components";
 import { usePathname } from "next/navigation";
-import React from "react";
+import Lottie, { LottieRefCurrentProps } from "lottie-react";
+import hamburgerAnimation from "@/animations/hamburger.json";
 
 const links = {
   Home: "/",
@@ -17,8 +18,9 @@ export default function NavbarSection() {
   const pathname = usePathname();
   const [isMobile, setIsMobile] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
-  const menuRef = useRef<HTMLDivElement>(null);
+  const lottieRef = useRef<LottieRefCurrentProps>(null);
 
+  // Screen resize effect to detect mobile
   useEffect(() => {
     const checkScreenSize = () => {
       setIsMobile(window.innerWidth < 768);
@@ -29,20 +31,30 @@ export default function NavbarSection() {
     return () => window.removeEventListener("resize", checkScreenSize);
   }, []);
 
-  // Close menu when clicking outside
+  // Initialize animation to frame 0 once Lottie is ready
   useEffect(() => {
-    function handleClickOutside(event: MouseEvent) {
-      if (menuRef.current && !menuRef.current.contains(event.target as Node)) {
-        setMenuOpen(false);
-      }
+    if (lottieRef.current) {
+      lottieRef.current.goToAndStop(0, true);
+    }
+  }, []);
+
+  const toggleMenu = () => {
+    if (!lottieRef.current) {
+      console.warn("Lottie animation ref not ready");
+      return;
     }
 
-    if (menuOpen) {
-      document.addEventListener("mousedown", handleClickOutside);
+    if (!menuOpen) {
+      // Play frames 0 to 30 (opening animation)
+      lottieRef.current.playSegments([0, 30], true);
+    } else {
+      // Play frames 30 to 59 (closing animation)
+      lottieRef.current.playSegments([30, 59], true);
+      // After closing, reset to frame 0
     }
 
-    return () => document.removeEventListener("mousedown", handleClickOutside);
-  }, [menuOpen]);
+    setMenuOpen((prev) => !prev);
+  };
 
   return (
     <nav className="bg-background fixed top-0 right-0 left-0 z-50 border-b border-gray-700 shadow-md">
@@ -52,35 +64,37 @@ export default function NavbarSection() {
         </Link>
 
         {isMobile ? (
-          <button
-            onClick={() => setMenuOpen((prev) => !prev)}
-            className="text-foreground focus:outline-none"
-            aria-label="Toggle menu"
-          >
-            <svg
-              className="h-6 w-6"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-              xmlns="http://www.w3.org/2000/svg"
+          <div className="relative flex w-50 items-end justify-end">
+            <button
+              onClick={toggleMenu}
+              className="text-foreground focus:outline-none"
+              aria-label="Toggle menu"
             >
-              {menuOpen ? (
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M6 18L18 6M6 6l12 12"
-                />
-              ) : (
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M4 6h16M4 12h16M4 18h16"
-                />
-              )}
-            </svg>
-          </button>
+              <Lottie
+                lottieRef={lottieRef}
+                animationData={hamburgerAnimation}
+                loop={false}
+                autoplay={false}
+                style={{ height: 32, width: 32 }}
+              />
+            </button>
+
+            <div
+              className={`bg-background absolute top-full right-0 left-0 z-40 flex max-h-96 flex-col items-center gap-4 overflow-hidden border-t border-gray-700 px-4 py-4 transition-all delay-300 duration-700 ease-in-out ${menuOpen ? "pointer-events-auto opacity-100" : "pointer-events-none max-h-0 opacity-0"} `}
+            >
+              {Object.entries(links).map(([name, href]) => (
+                <Link
+                  key={name}
+                  href={href}
+                  className={`text-foreground text-lg transition-all duration-100 hover:underline ease-in-out${
+                    pathname === href ? "text-teal-500 underline" : ""
+                  }`}
+                >
+                  {name}
+                </Link>
+              ))}
+            </div>
+          </div>
         ) : (
           <div className="flex gap-6">
             {Object.entries(links).map(([name, href]) => (
@@ -97,26 +111,6 @@ export default function NavbarSection() {
           </div>
         )}
       </Container>
-
-      {/* Mobile Menu */}
-      {isMobile && menuOpen && (
-        <div
-          ref={menuRef}
-          className="bg-background z-40 flex flex-col items-center gap-4 border-t border-gray-700 px-4 py-4 transition-all duration-300"
-        >
-          {Object.entries(links).map(([name, href]) => (
-            <Link
-              key={name}
-              href={href}
-              className={`text-foreground text-lg hover:underline ${
-                pathname === href ? "text-teal-500 underline" : ""
-              }`}
-            >
-              {name}
-            </Link>
-          ))}
-        </div>
-      )}
     </nav>
   );
 }
