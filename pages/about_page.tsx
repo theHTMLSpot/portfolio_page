@@ -6,40 +6,41 @@ import React, { useState, useEffect } from "react";
 
 import { motion } from "framer-motion";
 
-
 export default function AboutPage() {
-
   const [displayedText, setDisplayedText] = useState("");
   const fullText = "Abbout Me";
 
- useEffect(() => {
-  let i = 0;
-  const interval = setInterval(() => {
-    if (i === fullText.length - 1) {
-      clearInterval(interval);
-      return;
-    }
-    console.log(fullText[i]);
-    console.log(displayedText);
-    setDisplayedText((prev) => {return prev + fullText[i]});
-    i++;
-  }, 150);
-  return () => clearInterval(interval);
-}, []);
+  useEffect(() => {
+    let i = 0;
+    const interval = setInterval(() => {
+      if (i === fullText.length - 1) {
+        clearInterval(interval);
+        return;
+      }
+      console.log(fullText[i]);
+      console.log(displayedText);
+      setDisplayedText((prev) => {
+        return prev + fullText[i];
+      });
+      i++;
+    }, 150);
+    return () => clearInterval(interval);
+  }, [fullText]);
 
   return (
     <Container className="m-10 grid grid-cols-2 p-20 pb-40">
       <Container className="flex h-full w-full flex-col items-start justify-center">
         <motion.div
-      initial={{ width: 0 }}
-      animate={{ width: "100%" }}
-      transition={{ duration: 1 }}
-    >
-      <Title level={1} className="my-10 w-full text-5xl font-black">
-        {displayedText}
-        <span className="animate-pulse">|</span> {/* Optional blinking cursor */}
-      </Title>
-    </motion.div>
+          initial={{ width: 0 }}
+          animate={{ width: "100%" }}
+          transition={{ duration: 1 }}
+        >
+          <Title level={1} className="my-10 w-full text-5xl font-black">
+            {displayedText}
+            <span className="animate-pulse">|</span>{" "}
+            {/* Optional blinking cursor */}
+          </Title>
+        </motion.div>
 
         <Paragraph className="text-foreground mb-10">
           Hi! I{"'"}ve been interested in programming since I was 9. I started
@@ -87,4 +88,3 @@ export default function AboutPage() {
     </Container>
   );
 }
-
