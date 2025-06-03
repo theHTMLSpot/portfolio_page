@@ -28,7 +28,7 @@ export default function ProjectListing({ project }: { project: project }) {
         </Paragraph>
         <Link
           href={project.link}
-          className="text-foreground underline"
+          className="text-foreground underline hover:text-blue-400 transition-all duration-300 ease-in-out"
           target="_blank"
         >
           {project.inProgress ? "View Source Code" : "View Live Project"}
