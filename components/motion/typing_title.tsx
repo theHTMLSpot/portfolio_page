@@ -31,13 +31,14 @@ export default function TypingTitle({
     setIsBackspacing(false);
 
     const typeSpeed = text.length > 0 ? (duration * 1000) / text.length : 100;
-    const backspaceSpeed = 50;
+    const backspaceSpeed = 100;
 
     const typeText = () => {
       setIsTyping(true);
       let currentIndex = 0;
 
       const typeNextChar = () => {
+        if (isBackspacing) return; // Prevent typing if backspacing is in progress
         if (currentIndex < text.length) {
           setDisplayedText(text.slice(0, currentIndex + 1));
           currentIndex++;
@@ -58,9 +59,10 @@ export default function TypingTitle({
 
     const backspaceText = () => {
       setIsBackspacing(true);
-      let currentText = text;
+      let currentText = displayedText;
 
       const backspaceNextChar = () => {
+        if (isTyping) return;
         if (currentText.length > 0) {
           currentText = currentText.slice(0, -1);
           setDisplayedText(currentText);

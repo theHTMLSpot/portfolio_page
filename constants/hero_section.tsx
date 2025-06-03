@@ -23,20 +23,24 @@ export default function HeroSection() {
   const [secondWord, setSecondWord] = useState(0);
 
   useEffect(() => {
-    let timeout: NodeJS.Timeout;
+   
 
-    const cycleWords = () => {
+    const cycleWords = setInterval(() => {
       setFirstWord((prev) => (prev + 1) % firstWords.length);
       setSecondWord((prev) => (prev + 1) % secondWords.length);
 
+      console.log(
+        `Cycling words: ${firstWords[firstWord]} and ${secondWords[secondWord]}`,
+      );
+
       // Schedule next cycle AFTER animations are done
-      timeout = setTimeout(cycleWords, 5000); // match total animation time
-    };
+      
+    }, 5000); // 5 seconds for each cycle
 
     // Start initial cycle
-    timeout = setTimeout(cycleWords, 5000);
+    
 
-    return () => clearTimeout(timeout);
+    return () => clearTimeout(cycleWords);
   }, []);
 
   useEffect(() => {
