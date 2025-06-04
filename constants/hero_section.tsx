@@ -84,13 +84,13 @@ export default function HeroSection() {
   if (showLoader) {
     return (
       <div className="flex min-h-screen flex-col items-center justify-center gap-4">
-        <Paragraph className="w-1/9 text-2xl font-semibold">
+        <Paragraph className="text-center text-2xl font-semibold">
           Ethan Lagden
         </Paragraph>
 
-        <div className="flex w-1/9 items-center justify-center gap-3 text-xl">
-          <Paragraph className="text-md flex-1 text-right">Welcome</Paragraph>
-          <span className="text-md flex-1 animate-pulse text-left">
+        <div className="flex  w-full items-center justify-center gap-3 text-xl">
+          <Paragraph className="text-md  w-fit text-center">Welcome</Paragraph>
+          <span className="text-md w-1/24 text left  animate-pulse">
             {".".repeat(dots)}
           </span>
         </div>
