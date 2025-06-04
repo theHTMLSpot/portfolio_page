@@ -22,9 +22,9 @@ export default function HeroSection() {
   const [firstWord, setFirstWord] = useState(0);
   const [secondWord, setSecondWord] = useState(0);
 
-  useEffect(() => {
-   
+  const [dots, setDots] = useState(0);
 
+  useEffect(() => {
     const cycleWords = setInterval(() => {
       setFirstWord((prev) => (prev + 1) % firstWords.length);
       setSecondWord((prev) => (prev + 1) % secondWords.length);
@@ -34,30 +34,37 @@ export default function HeroSection() {
       );
 
       // Schedule next cycle AFTER animations are done
-      
-    }, 5000); // 5 seconds for each cycle
+    }, 7000); // 7 seconds for each cycle
 
     // Start initial cycle
-    
 
     return () => clearTimeout(cycleWords);
-  }, []);
+  }, [firstWords, secondWords]);
 
   useEffect(() => {
     setShowLoader(true);
 
+    const loadingAnimation = setInterval(() => {
+      setDots((prev) => (prev + 1) % 4);
+    }, 250); // Change every 250ms
+
+    document.body.style.overflowY = "hidden";
+
     const loaderTimer = setTimeout(() => {
       setShowLoader(false);
       setShowBars(true);
-    }, 1500);
+    }, 2500);
 
     const barsTimer = setTimeout(() => {
       setShowBars(false);
-    }, 3000);
+      document.body.style.overflowY = "auto";
+    }, 5000);
 
     return () => {
+      // Restore scrolling after loader
       clearTimeout(loaderTimer);
       clearTimeout(barsTimer);
+      clearInterval(loadingAnimation);
     };
   }, []);
 
@@ -76,9 +83,17 @@ export default function HeroSection() {
 
   if (showLoader) {
     return (
-      <div className="flex min-h-screen flex-col items-center justify-center gap-2">
-        <Paragraph className="text-center text-2xl">Ethan Lagden</Paragraph>
-        <Paragraph className="text-md text-center">Welcome ...</Paragraph>
+      <div className="flex min-h-screen flex-col items-center justify-center gap-4">
+        <Paragraph className="w-1/9 text-2xl font-semibold">
+          Ethan Lagden
+        </Paragraph>
+
+        <div className="flex w-1/9 items-center justify-center gap-3 text-xl">
+          <Paragraph className="text-md flex-1 text-right">Welcome</Paragraph>
+          <span className="text-md flex-1 animate-pulse text-left">
+            {".".repeat(dots)}
+          </span>
+        </div>
       </div>
     );
   }
@@ -104,6 +119,9 @@ export default function HeroSection() {
                   className="text-white"
                   cursor={true}
                   backspaceOnChange={true}
+                  waitBeforeBackspace={
+                    firstWords[firstWord] === "fullstack" ? 2150 : 3750
+                  }
                   text={firstWords[firstWord]}
                 />
                 <Title level={1} className="text-5xl opacity-0">
@@ -116,7 +134,7 @@ export default function HeroSection() {
                 key={secondWords[secondWord]}
                 className="text-gray-300"
                 text={secondWords[secondWord]}
-                duration={1}
+                duration={2}
               />
             </AnimatePresence>
           </div>

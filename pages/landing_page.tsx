@@ -8,7 +8,8 @@ export default function LandingPage() {
     <>
       <HeroSection />
       <AboutSection />
-      <TechnologiesSection />
+      <TechnologiesSection limit="3" />
+      
       <ProjectsSection howMany={"3"} />
     </>
   );

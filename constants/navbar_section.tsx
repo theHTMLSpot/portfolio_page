@@ -1,7 +1,8 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { Container, Link } from "@/components/components";
+import { Container } from "@/components/components";
+import Link from "next/link";
 import { usePathname } from "next/navigation";
 import Lottie, { LottieRefCurrentProps } from "lottie-react";
 import hamburgerAnimation from "@/animations/hamburger.json";
@@ -57,60 +58,65 @@ export default function NavbarSection() {
   };
 
   return (
-    <nav className="bg-background fixed top-0 right-0 left-0 z-50 border-b border-gray-700 shadow-md">
-      <Container className="flex h-20 items-center justify-between px-4 py-3">
-        <Link href="/" className="text-foreground text-xl font-semibold">
-          Ethan Lagden
-        </Link>
+    <nav className="fixed top-0 right-0 left-0 z-50 border-b border-gray-700 shadow-md">
+      <div className="bg-background/70 backdrop-blur-md transition-all duration-300 ease-in-out">
+        <Container className="flex h-20 items-center justify-between px-4 py-3">
+          <Link
+            href="/"
+            className="text-foreground text-xl font-semibold transition-all duration-300 hover:text-teal-500"
+          >
+            Ethan Lagden
+          </Link>
 
-        {isMobile ? (
-          <div className="relative flex w-50 items-end justify-end">
-            <button
-              onClick={toggleMenu}
-              className="text-foreground focus:outline-none"
-              aria-label="Toggle menu"
-            >
-              <Lottie
-                lottieRef={lottieRef}
-                animationData={hamburgerAnimation}
-                loop={false}
-                autoplay={false}
-                style={{ height: 32, width: 32 }}
-              />
-            </button>
+          {isMobile ? (
+            <div className="relative flex w-50 items-end justify-end">
+              <button
+                onClick={toggleMenu}
+                className="text-foreground focus:outline-none"
+                aria-label="Toggle menu"
+              >
+                <Lottie
+                  lottieRef={lottieRef}
+                  animationData={hamburgerAnimation}
+                  loop={false}
+                  autoplay={false}
+                  style={{ height: 32, width: 32 }}
+                />
+              </button>
 
-            <div
-              className={`bg-background absolute top-full right-0 left-0 z-40 flex max-h-96 flex-col items-center gap-4 overflow-hidden border-t border-gray-700 px-4 py-4 transition-all delay-300 duration-700 ease-in-out ${menuOpen ? "pointer-events-auto opacity-100" : "pointer-events-none max-h-0 opacity-0"} `}
-            >
+              <div
+                className={`absolute top-full right-0 left-0 z-40 flex max-h-96 flex-col items-center gap-4 overflow-hidden border-t border-gray-700 px-4 py-4 transition-all delay-300 duration-700 ease-in-out ${menuOpen ? "pointer-events-auto" : "pointer-events-none max-h-0 opacity-0"} `}
+              >
+                {Object.entries(links).map(([name, href]) => (
+                  <Link
+                    key={name}
+                    href={href}
+                    className={`text-foreground text-lg transition-all duration-300 hover:underline ease-in-out${
+                      pathname === href ? "text-teal-500 underline" : ""
+                    }`}
+                  >
+                    {name}
+                  </Link>
+                ))}
+              </div>
+            </div>
+          ) : (
+            <div className="flex gap-6">
               {Object.entries(links).map(([name, href]) => (
                 <Link
                   key={name}
                   href={href}
-                  className={`text-foreground text-lg transition-all duration-100 hover:underline ease-in-out${
-                    pathname === href ? "text-teal-500 underline" : ""
+                  className={`text-foreground transition-all duration-300 ease-in-out hover:underline ${
+                    pathname === href ? "text-teal-500" : ""
                   }`}
                 >
                   {name}
                 </Link>
               ))}
             </div>
-          </div>
-        ) : (
-          <div className="flex gap-6">
-            {Object.entries(links).map(([name, href]) => (
-              <Link
-                key={name}
-                href={href}
-                className={`text-foreground transition-all hover:underline ${
-                  pathname === href ? "text-teal-500" : ""
-                }`}
-              >
-                {name}
-              </Link>
-            ))}
-          </div>
-        )}
-      </Container>
+          )}
+        </Container>
+      </div>
     </nav>
   );
 }

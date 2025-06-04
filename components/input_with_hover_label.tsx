@@ -23,7 +23,7 @@ export default function InputWithHoverLabel({ ...props }: Readonly<Input>) {
         htmlFor={name}
         className={`pointer-events-none absolute text-sm font-semibold transition-all duration-200 ${
           isHovered || value !== ""
-            ? "top-2.5 left-2 bg-[#0a0a0a] text-white"
+            ? "top-2.5 left-2 bg-[#111829] text-white"
             : "top-[50%] left-2 text-gray-400"
         }`}
       >

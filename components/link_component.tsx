@@ -6,7 +6,7 @@ export default function LinkComponent({ ...props }: Readonly<Link_type>) {
     <Link
       href={props.href}
       target={props.target}
-      className={`hover:underline ${props.className}`}
+      className={`w-fit transition-all duration-300 hover:text-teal-500 hover:underline ${props.className}`}
     >
       {props.children}
     </Link>

@@ -6,7 +6,6 @@ import InputWithHoverLabel from "@/components/input_with_hover_label";
 import { contactForm } from "@/types/contact_form";
 import Lottie, { LottieRefCurrentProps } from "lottie-react";
 import contactAnimation from "@/animations/contact.json";
-import { form } from "motion/react-client";
 
 export default function ContactPage() {
   const lottieRef = useRef<LottieRefCurrentProps>(null);

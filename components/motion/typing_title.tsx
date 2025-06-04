@@ -1,7 +1,7 @@
 "use client";
 
 import { Title } from "@/components/components";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 
 export default function TypingTitle({
   text,
@@ -9,80 +9,68 @@ export default function TypingTitle({
   cursor = true,
   backspaceOnChange = false,
   duration = 2,
+  waitBeforeBackspace = 1000,
 }: {
   text: string;
   className?: string;
   cursor?: boolean;
   backspaceOnChange?: boolean;
-  duration?: number; // duration in seconds for the typing effect
+  duration?: number;
+  waitBeforeBackspace?: number;
 }) {
   const [displayedText, setDisplayedText] = useState("");
-  const [isTyping, setIsTyping] = useState(false);
-  const [isBackspacing, setIsBackspacing] = useState(false);
+  const textRef = useRef(""); // ✅ latest text value
 
   useEffect(() => {
     let typingTimeout: NodeJS.Timeout;
     let backspaceTimeout: NodeJS.Timeout;
     let pauseTimeout: NodeJS.Timeout;
 
-    // Clear any existing text when text prop changes
-    setDisplayedText("");
-    setIsTyping(false);
-    setIsBackspacing(false);
-
     const typeSpeed = text.length > 0 ? (duration * 1000) / text.length : 100;
-    const backspaceSpeed = 100;
-
-    const typeText = () => {
-      setIsTyping(true);
-      let currentIndex = 0;
-
-      const typeNextChar = () => {
-        if (isBackspacing) return; // Prevent typing if backspacing is in progress
-        if (currentIndex < text.length) {
-          setDisplayedText(text.slice(0, currentIndex + 1));
-          currentIndex++;
-          typingTimeout = setTimeout(typeNextChar, typeSpeed);
-        } else {
-          setIsTyping(false);
-          // If backspaceOnChange is true, start backspacing after a pause
-          if (backspaceOnChange) {
-            pauseTimeout = setTimeout(() => {
-              backspaceText();
-            }, 1000); // 1 second pause before backspacing
-          }
-        }
-      };
-
-      typeNextChar();
-    };
+    const backspaceSpeed = 50;
 
     const backspaceText = () => {
-      setIsBackspacing(true);
-      let currentText = displayedText;
-
       const backspaceNextChar = () => {
-        if (isTyping) return;
-        if (currentText.length > 0) {
-          currentText = currentText.slice(0, -1);
-          setDisplayedText(currentText);
+        textRef.current = textRef.current.slice(0, -1);
+        setDisplayedText(textRef.current);
+        if (textRef.current.length > 0) {
           backspaceTimeout = setTimeout(backspaceNextChar, backspaceSpeed);
         } else {
-          setIsBackspacing(false);
-          // Start typing again after backspacing is complete
-          setTimeout(() => {
+          pauseTimeout = setTimeout(() => {
             typeText();
-          }, 500);
+          }, 1000); // pause before typing new word
         }
       };
 
       backspaceNextChar();
     };
 
-    // Start the typing animation
+    const typeText = () => {
+      let currentIndex = 0;
+
+      const typeNextChar = () => {
+        const nextChar = text[currentIndex];
+        if (nextChar !== undefined) {
+          textRef.current = text.slice(0, currentIndex + 1);
+          setDisplayedText(textRef.current);
+          currentIndex++;
+          typingTimeout = setTimeout(typeNextChar, typeSpeed);
+        } else if (backspaceOnChange) {
+          pauseTimeout = setTimeout(() => {
+            setTimeout(() => {}, waitBeforeBackspace);
+            backspaceText();
+          }, waitBeforeBackspace);
+        }
+      };
+
+      typeNextChar();
+    };
+
+    // Reset and start animation
+    setDisplayedText("");
+    textRef.current = "";
     typeText();
 
-    // Cleanup function
     return () => {
       clearTimeout(typingTimeout);
       clearTimeout(backspaceTimeout);
