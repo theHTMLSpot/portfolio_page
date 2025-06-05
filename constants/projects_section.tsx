@@ -2,9 +2,11 @@
 
 import { useState, useEffect } from "react";
 import { project } from "@/types/project";
-import { Container, Title } from "@/components/components";
+import { Container } from "@/components/components";
 
 import ProjectListing from "@/components/project_listing";
+
+import SlideInTitle from "@/components/motion/slide_in_title";
 
 async function fetchProjects(
   setProjects: React.Dispatch<React.SetStateAction<project[]>>,
@@ -39,10 +41,7 @@ export default function ProjectsSection({ howMany }: { howMany?: string }) {
 
   return (
     <Container className="w-screen p-30">
-      <Title level={1} className="text-4xl font-bold">
-        {" "}
-        Projects{" "}
-      </Title>
+      <SlideInTitle text="Projects" />
       <Container className="my-10 grid h-full grid-cols-1 gap-16 sm:grid-cols-1 md:grid-cols-2 xl:grid-cols-3">
         {projects.map((project) => (
           <ProjectListing key={project.title} project={project} />

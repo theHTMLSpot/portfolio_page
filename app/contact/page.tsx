@@ -1,17 +1,17 @@
 "use client";
 
 import { useState, useRef, useEffect } from "react";
-import { Title, Container } from "@/components/components";
+import { Container } from "@/components/components";
 import InputWithHoverLabel from "@/components/input_with_hover_label";
 import { contactForm } from "@/types/contact_form";
 import Lottie, { LottieRefCurrentProps } from "lottie-react";
 import contactAnimation from "@/animations/contact.json";
 
+import FlyInTitle from "@/components/motion/fly_in_title";
+
 export default function ContactPage() {
   const lottieRef = useRef<LottieRefCurrentProps>(null);
   const [showAnim, setShowAnim] = useState(false);
-
-  
 
   const [formData, setFormData] = useState<contactForm>({
     firstName: "",
@@ -55,38 +55,34 @@ export default function ContactPage() {
 
     if (lottieRef.current?.animationItem) {
       const newErrors: contactForm = {
-          firstName: "",
-          lastName: "",
-          email: "",
-          subject: "",
-          message: "",
-        };
+        firstName: "",
+        lastName: "",
+        email: "",
+        subject: "",
+        message: "",
+      };
 
-        let hasErrors = false;
+      let hasErrors = false;
 
-        for (const key in formData) {
-          if (formData[key as keyof contactForm].trim() === "") {
-            newErrors[key as keyof contactForm] = `${key} can't be blank`;
-            hasErrors = true;
-          }
+      for (const key in formData) {
+        if (formData[key as keyof contactForm].trim() === "") {
+          newErrors[key as keyof contactForm] = `${key} can't be blank`;
+          hasErrors = true;
         }
+      }
 
-        if (hasErrors) {
-          setFormErrors(newErrors);
-          return; // Exit early if there are validation errors
-        }
+      if (hasErrors) {
+        setFormErrors(newErrors);
+        return; // Exit early if there are validation errors
+      }
       setShowAnim(true);
       const anim = lottieRef.current.animationItem;
 
       anim.play();
 
       const onComplete = () => {
-        
         const submit = document.getElementById("submit");
-        if (submit) submit.innerText = "Thanks For The Message"
-        
-
-        
+        if (submit) submit.innerText = "Thanks For The Message";
 
         // TODO: add api endpoint to send message with resend.
 
@@ -119,9 +115,7 @@ export default function ContactPage() {
     <Container className="my-40 flex w-screen flex-col items-center justify-center">
       <Container className="flex w-full flex-col items-center justify-center">
         <form className="flex flex-col gap-6 rounded-2xl bg-gray-900 p-20">
-          <Title level={1} className="w-fit text-4xl font-bold">
-            Get in touch
-          </Title>
+          <FlyInTitle text="Get in touch" />
           <Container className="flex gap-2">
             <div className="h-[50%] w-full">
               <InputWithHoverLabel
@@ -187,18 +181,20 @@ export default function ContactPage() {
 
           <button
             type="submit"
-            className="relative text-foreground relative my-5 h-auto w-full rounded-md bg-teal-600 py-5 hover:bg-teal-500"
+            className="text-foreground relative my-5 h-auto w-full rounded-md bg-teal-600 py-5 hover:bg-teal-500"
             onClick={handleSubmit}
             id="submit"
           >
             Submit
             <Lottie
               lottieRef={lottieRef}
-              className="absolute bottom-2 right-5"
+              className="absolute right-5 bottom-2"
               animationData={contactAnimation}
               loop={false}
               autoplay={false}
-              style={showAnim ? { height: 78, width: 79 } : { height: 0, width: 0 }}
+              style={
+                showAnim ? { height: 78, width: 79 } : { height: 0, width: 0 }
+              }
             />
           </button>
         </form>

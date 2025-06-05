@@ -1,8 +1,9 @@
 "use client";
 
 import Image from "next/image";
-import { Container, Link, Title } from "@/components/components";
+import { Container, Link } from "@/components/components";
 import React, { useState } from "react";
+import SlideInFromCenter from "@/components/motion/slide_in_from_center";
 
 const frontendTechnologies: Record<string, string> = {
   React: "/icons/react.svg",
@@ -66,18 +67,18 @@ function getLimitedTechnologies(
   backend: Record<string, string>,
   frontend: Record<string, string>,
   other: Record<string, string>,
-  limit?: string
+  limit?: string,
 ) {
   const perCategoryLimit = limit === "all" ? Infinity : 3;
 
   const frontendTechs = Object.fromEntries(
-    Object.entries(frontend).slice(0, perCategoryLimit)
+    Object.entries(frontend).slice(0, perCategoryLimit),
   );
   const backendTechs = Object.fromEntries(
-    Object.entries(backend).slice(0, perCategoryLimit)
+    Object.entries(backend).slice(0, perCategoryLimit),
   );
   const otherTechs = Object.fromEntries(
-    Object.entries(other).slice(0, perCategoryLimit)
+    Object.entries(other).slice(0, perCategoryLimit),
   );
 
   return { frontendTechs, backendTechs, otherTechs };
@@ -86,7 +87,7 @@ function getLimitedTechnologies(
 function shouldBeHighlighted(
   name: string,
   section: "Frontend" | "Backend" | "Other",
-  hovering: string | null
+  hovering: string | null,
 ) {
   if (!hovering) return false;
   const groups: Record<string, Record<string, string>> = {
@@ -100,7 +101,7 @@ function shouldBeHighlighted(
 function shouldBeDeemphasized(
   name: string,
   section: "Frontend" | "Backend" | "Other",
-  hovering: string | null
+  hovering: string | null,
 ) {
   if (!hovering) return false;
 
@@ -113,7 +114,11 @@ function shouldBeDeemphasized(
   return hovering !== section && name in groups[section];
 }
 
-export default function TechnologiesSection({ limit = "all" }: { limit?: string }) {
+export default function TechnologiesSection({
+  limit = "all",
+}: {
+  limit?: string;
+}) {
   const [visibleTooltip, setVisibleTooltip] = useState<string | null>(null);
   const [hovering, setHovering] = useState<string | null>(null);
 
@@ -121,14 +126,12 @@ export default function TechnologiesSection({ limit = "all" }: { limit?: string 
     backendTechnologies,
     frontendTechnologies,
     otherTechnologies,
-    limit
+    limit,
   );
 
   return (
     <Container className="m-10 flex h-full w-screen flex-col gap-16 p-20">
-      <Title level={1} className="text-4xl font-bold">
-        Technologies
-      </Title>
+      <SlideInFromCenter text="Technologies" initials="TH" />
 
       {[
         { title: "Frontend", techs: frontendTechs },
@@ -147,7 +150,7 @@ export default function TechnologiesSection({ limit = "all" }: { limit?: string 
             {Object.entries(techs).map(([name, src]) => (
               <div
                 key={name}
-                className={`relative flex h-45 w-40 cursor-pointer flex-col items-center justify-center gap-2 rounded-md border border-teal-950 bg-gray-800 p-5 transition-all duration-300 hover:translate-y-[-1rem] hover:scale-110 hover:shadow-lg hover:shadow-teal-900/40 ${shouldBeHighlighted(name, title as any, hovering) ? "scale-110" : shouldBeDeemphasized(name,title as any, hovering) ? "scale-90": "scale-100"}`}
+                className={`relative flex h-45 w-40 cursor-pointer flex-col items-center justify-center gap-2 rounded-md border border-teal-950 bg-gray-800 p-5 transition-all duration-300 hover:translate-y-[-1rem] hover:scale-110 hover:shadow-lg hover:shadow-teal-900/40 ${shouldBeHighlighted(name, title as any, hovering) ? "scale-110" : shouldBeDeemphasized(name, title as any, hovering) ? "scale-90" : "scale-100"}`}
                 onMouseEnter={() => setVisibleTooltip(name)}
                 onMouseLeave={() => setVisibleTooltip(null)}
               >

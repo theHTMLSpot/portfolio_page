@@ -16,7 +16,7 @@ export default function ProjectListing({ project }: { project: project }) {
         />
       </Container>
 
-      <Container className="w-full px-6">
+      <Container className="w-full">
         <div className="my-5 flex flex-col justify-between">
           <h3 className="min-h-[3.5rem] text-3xl leading-tight font-bold">
             {project.title}
@@ -28,7 +28,7 @@ export default function ProjectListing({ project }: { project: project }) {
         </Paragraph>
         <Link
           href={project.link}
-          className="text-foreground underline hover:text-blue-400 transition-all duration-300 ease-in-out"
+          className="text-foreground underline transition-all duration-300 ease-in-out hover:text-blue-400"
           target="_blank"
         >
           {project.inProgress ? "View Source Code" : "View Live Project"}

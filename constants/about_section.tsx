@@ -6,7 +6,7 @@ export default function AboutSection() {
   return (
     <Container className="m-10 grid grid-cols-2 p-20 pb-40">
       <Container className="flex h-full w-full flex-col items-start justify-center">
-        <Title level={1} className="my-10">
+        <Title level={1} className="my-10 text-2xl font-black">
           Who Am I
         </Title>
 
