@@ -42,7 +42,7 @@ export default function ProjectsSection({ howMany }: { howMany?: string }) {
   return (
     <Container className="w-screen p-30">
       <SlideInTitle text="Projects" />
-      <Container className="my-10 grid h-full grid-cols-1 gap-16 sm:grid-cols-1 md:grid-cols-2 xl:grid-cols-3">
+      <Container className="my-10 grid h-full grid-cols-1 gap-5 sm:grid-cols-1 md:grid-cols-2 xl:grid-cols-3">
         {projects.map((project) => (
           <ProjectListing key={project.title} project={project} />
         ))}

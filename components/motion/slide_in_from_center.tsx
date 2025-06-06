@@ -40,11 +40,11 @@ export default function SlideInFromCenter({
   if (phase === "expand") {
     return (
       <motion.div
-        initial={{ scaleX: 0 }}
-        animate={{ scaleX: 1 }}
-        transition={{ duration: 0.1, ease: "easeOut" }}
+        initial={{ width: 0 }}
+        animate={{ width: 120 }}
+        transition={{ duration: 2, ease: "easeInOut" }}
         style={{ transformOrigin: "center" }}
-        className="w-60 overflow-hidden whitespace-nowrap"
+        className="overflow-hidden whitespace-nowrap"
       >
         <h1 className="overflow-clip text-left text-4xl font-bold whitespace-nowrap">
           {text}
