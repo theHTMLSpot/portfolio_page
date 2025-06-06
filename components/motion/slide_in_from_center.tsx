@@ -20,7 +20,7 @@ export default function SlideInFromCenter({
 
     const slideTimeout = setTimeout(() => setPhase("slide"), 100);
     const expandTimeout = setTimeout(() => setPhase("expand"), 900);
-    const doneTimeout = setTimeout(() => setPhase("done"), 1000);
+    const doneTimeout = setTimeout(() => setPhase("done"), 2000);
 
     return () => {
       clearTimeout(slideTimeout);
@@ -31,34 +31,39 @@ export default function SlideInFromCenter({
 
   if (phase === "slide") {
     return (
-      <div className="flex w-60 items-center overflow-hidden">
-        <SlideInTitle text={initials} className="w-full text-center" />
+      <div
+      className="overflow-hidden w-[250px] h-20 flex items-center justify-center"
+      >
+        <SlideInTitle text={initials} className="h-20 cursor w-full cursor-pointer text-center text-4xl font-bold whitespace-nowrap transition-all duration-300 ease-in-out hover:font-black hover:text-teal-400 hover:underline  " />
       </div>
     );
   }
 
   if (phase === "expand") {
     return (
-      <motion.div
-        initial={{ width: 0 }}
-        animate={{ width: 120 }}
-        transition={{ duration: 2, ease: "easeInOut" }}
-        style={{ transformOrigin: "center" }}
-        className="overflow-hidden whitespace-nowrap"
-      >
-        <h1 className="overflow-clip text-left text-4xl font-bold whitespace-nowrap">
-          {text}
-        </h1>
-      </motion.div>
+      <div className="w-[250px] flex items-center justify-center h-20">
+        <motion.div
+          initial={{ width: 0 }}
+          animate={{ width: "250px" }}
+          transition={{ duration: 0.4, ease: "easeInOut" }}
+          style={{ transformOrigin: "center" }}
+          className="relative flex items-center justify-center h-20 overflow-hidden"
+        >
+          <h1 className="text-4xl w-full absolute top-0 left-1/2 text-left -translate-x-1/2 font-bold overflow-hidden whitespace-nowrap ">
+            {text}
+          </h1>
+        </motion.div>
+      </div>
+
     );
   }
 
   return (
     <div
-      className="overflow-hidden"
-      style={{ width: "fit", textAlign: "left" }}
+      className="overflow-hidden w-[250px] h-20 flex items-center justify-center"
+      
     >
-      <h1 className="cursor w-fit cursor-pointer text-4xl font-bold whitespace-nowrap transition-all duration-300 ease-in-out hover:font-black hover:text-teal-400 hover:underline  ">
+      <h1 className="h-20 cursor w-full cursor-pointer text-left text-4xl font-bold whitespace-nowrap transition-all duration-300 ease-in-out hover:font-black hover:text-teal-400 hover:underline  ">
         {text}
       </h1>
     </div>
