@@ -14,7 +14,7 @@
     "link": "https://script-space.vercel.app/"
   },
   {
-    "title": "ToDo cli in C#",
+    "title": "ToDo cli",
     "description": "A command line interface for a todo list",
     "image": "/images/ToDo.png",
     "inProgress": false,

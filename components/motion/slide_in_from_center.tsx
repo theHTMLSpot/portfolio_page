@@ -11,17 +11,21 @@ export default function SlideInFromCenter({
   text: string;
   initials: string;
 }) {
-  const [phase, setPhase] = useState<"initial" | "slide" | "expand">("initial");
+  const [phase, setPhase] = useState<"initial" | "slide" | "expand" | "done">(
+    "initial",
+  );
 
   useEffect(() => {
     setPhase("initial");
 
     const slideTimeout = setTimeout(() => setPhase("slide"), 100);
     const expandTimeout = setTimeout(() => setPhase("expand"), 900);
+    const doneTimeout = setTimeout(() => setPhase("done"), 1000);
 
     return () => {
       clearTimeout(slideTimeout);
       clearTimeout(expandTimeout);
+      clearTimeout(doneTimeout);
     };
   }, [text, initials]);
 
@@ -52,9 +56,11 @@ export default function SlideInFromCenter({
   return (
     <div
       className="overflow-hidden"
-      style={{ width: "auto", textAlign: "left" }}
+      style={{ width: "fit", textAlign: "left" }}
     >
-      <h1 className="text-4xl font-bold whitespace-nowrap">{text}</h1>
+      <h1 className="cursor w-fit cursor-pointer text-4xl font-bold whitespace-nowrap transition-all duration-300 ease-in-out hover:font-black hover:text-teal-400 hover:underline  ">
+        {text}
+      </h1>
     </div>
   );
 }

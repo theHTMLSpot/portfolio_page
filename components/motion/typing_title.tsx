@@ -1,7 +1,7 @@
 "use client";
 
 import { Title } from "@/components/components";
-import { useEffect, useRef, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 
 export default function TypingTitle({
   text,
@@ -10,6 +10,8 @@ export default function TypingTitle({
   backspaceOnChange = false,
   duration = 2,
   waitBeforeBackspace = 1000,
+  onMouseEnter,
+  onMouseExit,
 }: {
   text: string;
   className?: string;
@@ -17,6 +19,8 @@ export default function TypingTitle({
   backspaceOnChange?: boolean;
   duration?: number;
   waitBeforeBackspace?: number;
+  onMouseEnter?: () => void;
+  onMouseExit?: () => void;
 }) {
   const [displayedText, setDisplayedText] = useState("");
   const textRef = useRef(""); // ✅ latest text value
@@ -79,7 +83,11 @@ export default function TypingTitle({
   }, [text, duration, backspaceOnChange]);
 
   return (
-    <div className={`flex h-full ${className}`}>
+    <div
+      className={`flex h-full ${className}`}
+      onMouseEnter={onMouseEnter}
+      onMouseLeave={onMouseExit}
+    >
       <Title level={1} className="h-full whitespace-nowrap">
         {displayedText}
         {cursor && <span className="ml-1 animate-pulse text-current">|</span>}

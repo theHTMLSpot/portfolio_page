@@ -1,11 +1,14 @@
 import { Container, Paragraph, Link } from "./components";
 import { project } from "@/types/project";
 import Image from "next/image";
+import BorderColorTitle from "./motion/border-colour";
+
+import { motion } from "framer-motion";
 
 export default function ProjectListing({ project }: { project: project }) {
   return (
     <Container className="m-0 flex w-full flex-col items-start justify-center p-0">
-      <Container className="w-full">
+      <Container className="h-1/2 w-full">
         <Image
           src={project.image}
           alt="Decorative Background"
@@ -16,23 +19,29 @@ export default function ProjectListing({ project }: { project: project }) {
         />
       </Container>
 
-      <Container className="w-full">
-        <div className="my-5 flex flex-col justify-between">
-          <h3 className="min-h-[3.5rem] text-3xl leading-tight font-bold">
-            {project.title}
-          </h3>
+      <Container className="h-1/2 w-full">
+        <div className="my-7 flex h-1/3 flex-col justify-between">
+          <BorderColorTitle text={project.title} />
         </div>
 
-        <Paragraph className="text-foreground mb-10 text-sm">
+        <Paragraph className="text-foreground mb-10 h-1/6 text-sm">
           {project.description}
         </Paragraph>
-        <Link
-          href={project.link}
-          className="text-foreground underline transition-all duration-300 ease-in-out hover:text-blue-400"
-          target="_blank"
-        >
-          {project.inProgress ? "View Source Code" : "View Live Project"}
-        </Link>
+        <div className="h-12 w-fit overflow-hidden">
+          <motion.div
+            initial={{ translateY: 200 }}
+            animate={{ translateY: 0 }}
+            transition={{ duration: 0.1, delay: 1 }}
+          >
+            <Link
+              href={project.link}
+              className="text-foreground transition-all duration-300 ease-in-out hover:text-blue-400"
+              target="_blank"
+            >
+              {project.inProgress ? "View Source Code" : "View Live Project"}
+            </Link>
+          </motion.div>
+        </div>
       </Container>
     </Container>
   );

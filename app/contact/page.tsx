@@ -9,6 +9,12 @@ import contactAnimation from "@/animations/contact.json";
 
 import FlyInTitle from "@/components/motion/fly_in_title";
 
+function formatLabel(key: string): string {
+  return key
+    .replace(/([A-Z])/g, " $1") // Insert space before uppercase letters
+    .replace(/^./, (str) => str.toUpperCase()); // Capitalize the first character
+}
+
 export default function ContactPage() {
   const lottieRef = useRef<LottieRefCurrentProps>(null);
   const [showAnim, setShowAnim] = useState(false);
@@ -35,7 +41,7 @@ export default function ContactPage() {
     if (value === "") {
       setFormErrors({
         ...formErrors,
-        [name]: `${name} can't be blank`,
+        [name]: `${formatLabel(name)} can't be blank`,
       });
     } else {
       setFormErrors({
@@ -66,7 +72,8 @@ export default function ContactPage() {
 
       for (const key in formData) {
         if (formData[key as keyof contactForm].trim() === "") {
-          newErrors[key as keyof contactForm] = `${key} can't be blank`;
+          const label = formatLabel(key);
+          newErrors[key as keyof contactForm] = `${label} can't be blank`;
           hasErrors = true;
         }
       }
