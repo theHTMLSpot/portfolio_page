@@ -7,7 +7,7 @@ import Image from "next/image";
 import RevealBars from "@/components/motion/bars";
 import TypingTitle from "@/components/motion/typing_title";
 import FadeInTitle from "@/components/motion/fade_in_title";
-import { AnimatePresence } from "framer-motion";
+import { AnimatePresence, motion } from "framer-motion";
 
 const firstWords = ["Fullstack", "Problem", "Creative"];
 
@@ -81,16 +81,40 @@ export default function HeroSection() {
     />
   );
 
+  const name = ["E", "t", "h", "a", "n", " ", "L", "a", "g", "d", "e", "n"];
+
   if (showLoader) {
     return (
       <div className="flex min-h-screen flex-col items-center justify-center gap-4">
-        <Paragraph className="text-center text-2xl font-semibold">
-          Ethan Lagden
+        <Paragraph className="flex gap-0 text-center text-2xl font-semibold">
+          {name.map((char, i) =>
+            name[i] === " " ? (
+              <span key={i} className="w-2" />
+            ) : (
+              <motion.span
+                key={i}
+                className="text-foreground inline-block"
+                animate={{
+                  y: [0, -6, 6, 0], // smoother bounce motion
+                  opacity: [1, 0.8, 1], // subtle flicker
+                }}
+                transition={{
+                  duration: 2,
+                  delay: i * 0.1, // staggered timing per character
+                  ease: [0.42, 0, 0.58, 1], // easeInOutCubic
+                  repeat: Infinity,
+                  repeatType: "loop",
+                }}
+              >
+                {char}
+              </motion.span>
+            ),
+          )}
         </Paragraph>
 
-        <div className="flex  w-full items-center justify-center gap-3 text-xl">
-          <Paragraph className="text-md  w-fit text-center">Welcome</Paragraph>
-          <span className="text-md w-1/24 text left  animate-pulse">
+        <div className="flex w-full items-center justify-center gap-3 text-xl">
+          <Paragraph className="text-md w-fit text-center">Welcome</Paragraph>
+          <span className="text-md text left w-1/24 animate-pulse">
             {".".repeat(dots)}
           </span>
         </div>
@@ -142,7 +166,7 @@ export default function HeroSection() {
           <Paragraph>5+ years of programming experience.</Paragraph>
           <button
             onClick={() => router.push("/contact")}
-            className="text-foreground my-20 h-12 w-60 rounded-md bg-teal-600 p-5 px-4 py-2 hover:bg-teal-700"
+            className="text-foreground easeInOut text-md relative my-5 h-auto w-1/3 rounded-md bg-teal-500 py-5 transition-all duration-300 hover:-translate-y-2 hover:bg-teal-600"
           >
             Contact Me
           </button>

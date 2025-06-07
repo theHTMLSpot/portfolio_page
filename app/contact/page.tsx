@@ -7,7 +7,10 @@ import { contactForm } from "@/types/contact_form";
 import Lottie, { LottieRefCurrentProps } from "lottie-react";
 import contactAnimation from "@/animations/contact.json";
 
+import { motion } from "framer-motion";
+
 import FlyInTitle from "@/components/motion/fly_in_title";
+import ShakeOnError from "@/components/motion/shake_on_error";
 
 function formatLabel(key: string): string {
   return key
@@ -18,6 +21,33 @@ function formatLabel(key: string): string {
 export default function ContactPage() {
   const lottieRef = useRef<LottieRefCurrentProps>(null);
   const [showAnim, setShowAnim] = useState(false);
+  const [thankYouMode, setThankYouMode] = useState(false);
+
+  const message = [
+    "T",
+    "h",
+    "a",
+    "n",
+    "k",
+    "s",
+    " ",
+    "f",
+    "o",
+    "r",
+    " ",
+    "t",
+    "h",
+    "e",
+    " ",
+    "m",
+    "e",
+    "s",
+    "s",
+    "a",
+    "g",
+    "e",
+    "!",
+  ];
 
   const [formData, setFormData] = useState<contactForm>({
     firstName: "",
@@ -88,8 +118,7 @@ export default function ContactPage() {
       anim.play();
 
       const onComplete = () => {
-        const submit = document.getElementById("submit");
-        if (submit) submit.innerText = "Thanks For The Message";
+        setThankYouMode(true);
 
         // TODO: add api endpoint to send message with resend.
 
@@ -125,31 +154,41 @@ export default function ContactPage() {
           <FlyInTitle text="Get in touch" />
           <Container className="flex gap-2">
             <div className="h-[50%] w-full">
-              <InputWithHoverLabel
-                name="firstName"
-                label="First Name"
-                type="text"
-                value={formData.firstName}
-                onChange={handleChange}
-              />
+              <ShakeOnError trigger={!!formErrors.firstName}>
+                <InputWithHoverLabel
+                  name="firstName"
+                  label="First Name"
+                  type="text"
+                  value={formData.firstName}
+                  onChange={handleChange}
+                />
+              </ShakeOnError>
               {formErrors.firstName && (
-                <span className="text-red-700">{formErrors.firstName}</span>
+                <span className="max-h-fit text-red-700">
+                  {formErrors.firstName}
+                </span>
               )}
             </div>
+
             <div className="h-[50%] w-full">
-              <InputWithHoverLabel
-                name="lastName"
-                label="Last Name"
-                type="text"
-                value={formData.lastName}
-                onChange={handleChange}
-              />
+              <ShakeOnError trigger={!!formErrors.lastName}>
+                <InputWithHoverLabel
+                  name="lastName"
+                  label="Last Name"
+                  type="text"
+                  value={formData.lastName}
+                  onChange={handleChange}
+                />
+              </ShakeOnError>
               {formErrors.lastName && (
-                <span className="text-red-700">{formErrors.lastName}</span>
+                <span className="max-h-fit text-red-700">
+                  {formErrors.lastName}
+                </span>
               )}
             </div>
           </Container>
-          <div>
+
+          <ShakeOnError trigger={!!formErrors.email}>
             <InputWithHoverLabel
               name="email"
               label="Email"
@@ -157,11 +196,12 @@ export default function ContactPage() {
               value={formData.email}
               onChange={handleChange}
             />
-            {formErrors.email && (
-              <span className="text-red-700">{formErrors.email}</span>
-            )}
-          </div>
-          <div>
+          </ShakeOnError>
+          {formErrors.email && (
+            <span className="max-h-fit text-red-700">{formErrors.email}</span>
+          )}
+
+          <ShakeOnError trigger={!!formErrors.subject}>
             <InputWithHoverLabel
               name="subject"
               label="Subject"
@@ -169,11 +209,12 @@ export default function ContactPage() {
               value={formData.subject}
               onChange={handleChange}
             />
-            {formErrors.subject && (
-              <span className="text-red-700">{formErrors.subject}</span>
-            )}
-          </div>
-          <div>
+          </ShakeOnError>
+          {formErrors.subject && (
+            <span className="max-h-fit text-red-700">{formErrors.subject}</span>
+          )}
+
+          <ShakeOnError trigger={!!formErrors.message}>
             <InputWithHoverLabel
               name="message"
               label="Message"
@@ -181,29 +222,65 @@ export default function ContactPage() {
               value={formData.message}
               onChange={handleChange}
             />
-            {formErrors.message && (
-              <span className="text-red-700">{formErrors.message}</span>
-            )}
-          </div>
+          </ShakeOnError>
+          {formErrors.message && (
+            <span className="max-h-fit text-red-700">{formErrors.message}</span>
+          )}
 
-          <button
-            type="submit"
-            className="text-foreground relative my-5 h-auto w-full rounded-md bg-teal-600 py-5 hover:bg-teal-500"
-            onClick={handleSubmit}
-            id="submit"
-          >
-            Submit
-            <Lottie
-              lottieRef={lottieRef}
-              className="absolute right-5 bottom-2"
-              animationData={contactAnimation}
-              loop={false}
-              autoplay={false}
-              style={
-                showAnim ? { height: 78, width: 79 } : { height: 0, width: 0 }
-              }
-            />
-          </button>
+          <div className="h-fit w-full overflow-hidden">
+            <motion.div
+              initial={{ translateY: 300 }}
+              animate={{ translateY: 0 }}
+              transition={{ duration: 0.5, delay: 0.1 }}
+              className="h-full w-full"
+            >
+              <button
+                type="submit"
+                className="text-foreground easeInOut relative my-5 h-auto w-full rounded-md bg-teal-500 py-5 text-xl transition-all duration-300 hover:-translate-y-2 hover:bg-teal-600"
+                onClick={handleSubmit}
+                id="submit"
+              >
+                {!thankYouMode && "Submit"}
+                {thankYouMode && (
+                  <p className="flex w-full items-center justify-center gap-0 text-center">
+                    {message.map((char, i) =>
+                      char === " " ? (
+                        <span key={i} className="w-2" />
+                      ) : (
+                        <motion.span
+                          key={i}
+                          className="text-foreground inline-block"
+                          animate={{
+                            y: [0, -6, 6, 0], // smoother bounce motion
+                            opacity: [1, 0.8, 1], // subtle flicker
+                          }}
+                          transition={{
+                            duration: 0.5,
+                            delay: i * 0.05, // staggered timing per character
+                            ease: [0.42, 0, 0.58, 1], // easeInOutCubic
+                          }}
+                        >
+                          {char}
+                        </motion.span>
+                      ),
+                    )}
+                  </p>
+                )}
+                <Lottie
+                  lottieRef={lottieRef}
+                  className="absolute right-5 bottom-2"
+                  animationData={contactAnimation}
+                  loop={false}
+                  autoplay={false}
+                  style={
+                    showAnim
+                      ? { height: 78, width: 79 }
+                      : { height: 0, width: 0 }
+                  }
+                />
+              </button>
+            </motion.div>
+          </div>
         </form>
       </Container>
     </Container>
