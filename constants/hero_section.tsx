@@ -132,7 +132,7 @@ export default function HeroSection() {
               <span className="w-fit">
                 <TypingTitle
                   duration={2}
-                  className="text-white"
+                  className="h-full text-4xl font-bold text-current sm:text-2xl md:text-5xl"
                   cursor={true}
                   backspaceOnChange={true}
                   waitBeforeBackspace={
@@ -153,7 +153,7 @@ export default function HeroSection() {
             <AnimatePresence mode="wait">
               <FadeInTitle
                 key={secondWords[secondWord]}
-                className="text-gray-300"
+                className="h-full text-4xl font-bold text-gray-300 sm:text-2xl md:text-5xl"
                 text={secondWords[secondWord]}
                 duration={2}
               />
