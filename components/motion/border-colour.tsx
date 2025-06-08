@@ -9,14 +9,14 @@ export default function BorderColorTitle({ text }: { text: string }) {
   return (
     <div className="relative w-fit overflow-visible p-1">
       <h1
-        className={`text-stroke-1 text-stroke-gray-500 text-background absolute top-0 left-0 -z-10 text-4xl font-bold opacity-0 transition-all duration-300 ease-in-out ${
+        className={`text-stroke-1 text-stroke-gray-500 text-background absolute top-0 left-0 -z-10 text-5xl font-bold opacity-0 transition-all duration-300 ease-in-out sm:text-2xl ${
           hovering && "translate-x-[-5px] translate-y-[-8px] opacity-100"
         }`}
       >
         {text}
       </h1>
 
-      <h1 className="text-background text-stroke-1 text-stroke-teal text-4xl font-bold">
+      <h1 className="text-background text-stroke-1 text-stroke-teal text-5xl font-bold sm:text-2xl">
         {text}
       </h1>
 
