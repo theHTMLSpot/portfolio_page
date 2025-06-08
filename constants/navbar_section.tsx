@@ -58,7 +58,7 @@ export default function NavbarSection() {
   };
 
   return (
-    <nav className="fixed top-0 right-0 left-0 z-50 border-b border-gray-700 shadow-md">
+    <nav className="fixed top-0 right-0 left-0 z-5 w-screen border-b border-gray-700 shadow-md">
       <div className="bg-background/70 backdrop-blur-md transition-all duration-300 ease-in-out">
         <Container className="flex h-20 items-center justify-between px-4 py-3">
           <Link
@@ -85,7 +85,7 @@ export default function NavbarSection() {
               </button>
 
               <div
-                className={`absolute top-full right-0 left-0 z-40 flex max-h-96 flex-col items-center gap-4 overflow-hidden border-t border-gray-700 px-4 py-4 transition-all delay-300 duration-700 ease-in-out ${menuOpen ? "pointer-events-auto" : "pointer-events-none max-h-0 opacity-0"} `}
+                className={`absolute top-full right-0 left-0 z-auto flex max-h-96 flex-col items-center gap-4 overflow-hidden border-t border-gray-700 bg-black px-4 py-4 transition-all delay-300 duration-700 ease-in-out ${menuOpen ? "pointer-events-auto opacity-100" : "pointer-events-none max-h-0 opacity-0"} `}
               >
                 {Object.entries(links).map(([name, href]) => (
                   <Link

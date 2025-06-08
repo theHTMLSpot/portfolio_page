@@ -19,7 +19,10 @@ export default function FadeInTitle({
       transition={{ duration: duration || 2 }}
       className={`flex h-full ${className}`}
     >
-      <Title level={1} className="h-full">
+      <Title
+        level={1}
+        className="h-full text-4xl font-bold text-current sm:text-2xl md:text-5xl"
+      >
         {text}
       </Title>
     </motion.div>

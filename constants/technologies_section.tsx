@@ -130,7 +130,7 @@ export default function TechnologiesSection({
   );
 
   return (
-    <Container className="m-10 flex h-full w-screen flex-col gap-16 p-20">
+    <Container className="xl:grid-cols-2px-4 m-10 grid grid-cols-1 p-0 py-16 pb-40 sm:px-10 md:p-20 lg:px-20">
       <SlideInFromCenter text="Technologies" initials="TH" />
 
       {[

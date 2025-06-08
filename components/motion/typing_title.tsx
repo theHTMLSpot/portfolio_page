@@ -84,11 +84,14 @@ export default function TypingTitle({
 
   return (
     <div
-      className={`flex h-full ${className}`}
+      className={`z-0 flex h-full ${className}`}
       onMouseEnter={onMouseEnter}
       onMouseLeave={onMouseExit}
     >
-      <Title level={1} className="h-full">
+      <Title
+        level={1}
+        className="h-full text-4xl font-bold text-current sm:text-2xl md:text-5xl"
+      >
         {displayedText}
         {cursor && <span className="ml-1 animate-pulse text-current">|</span>}
       </Title>

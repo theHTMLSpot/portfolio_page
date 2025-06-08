@@ -6,13 +6,12 @@ import Image from "next/image";
 
 export default function AboutPage() {
   return (
-    <Container className="m-10 grid grid-cols-1 xl:grid-cols-2 p-20 pb-40">
+    <Container className="xl:grid-cols-2px-4 m-10 grid grid-cols-1 p-0 py-16 pb-40 sm:px-10 md:p-20 lg:px-20">
       <Container className="flex h-full w-full flex-col items-start justify-center">
         <TypingTitle
           text="About Me"
           className="text-foreground mb-10 text-4xl font-black"
         />
-        
 
         <Paragraph className="text-foreground mb-10">
           Hi! I{"'"}ve been interested in programming since I was 9. I started
@@ -46,18 +45,17 @@ export default function AboutPage() {
           growing — and I hope you enjoyed reading my story!
         </Paragraph>
       </Container>
-      <Container className="hidden xl:flex h-full items-center justify-end">
+      <Container className="hidden h-full items-center justify-end xl:flex">
         <Image
           src="/images/ethan.jpeg"
           alt="Ethan Lagden"
           width={500}
           height={500}
-          className="w-[50%] rounded-full hover:scale-105 transition-all duration-300 ease-in-out"
+          className="w-[50%] rounded-full transition-all duration-300 ease-in-out hover:scale-105"
           priority
           aria-hidden="true"
         />
       </Container>
-
     </Container>
   );
 }

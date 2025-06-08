@@ -5,45 +5,34 @@ import { project } from "@/types/project";
 import { Container } from "@/components/components";
 
 import ProjectListing from "@/components/project_listing";
-
 import SlideInTitle from "@/components/motion/slide_in_title";
 
-async function fetchProjects(
-  setProjects: React.Dispatch<React.SetStateAction<project[]>>,
-) {
+async function fetchProjects(): Promise<project[]> {
   const res = await fetch("/data/projects.json");
-  const data = await res.json();
-  setProjects(data);
+  return await res.json();
 }
 
 export default function ProjectsSection({ howMany }: { howMany?: string }) {
   const [projects, setProjects] = useState<project[]>([]);
 
-  if (howMany === undefined) {
-    howMany = "all";
-  }
-
   useEffect(() => {
-    try {
-      fetchProjects(setProjects);
-    } catch (error) {
-      console.log(error);
-    }
-  }, [projects]);
+    fetchProjects()
+      .then(setProjects)
+      .catch((error) => console.error("Failed to fetch projects:", error));
+  }, []);
 
-  if (howMany === "all") {
-    howMany = projects.length.toString();
-  }
+  const projectCount =
+    howMany === undefined || howMany === "all"
+      ? projects.length
+      : parseInt(howMany);
 
-  if (projects.length > parseInt(howMany)) {
-    projects.splice(parseInt(howMany));
-  }
+  const visibleProjects = projects.slice(0, projectCount);
 
   return (
-    <Container className="w-screen p-30">
+    <Container className="w-full px-4 py-16 sm:px-10 md:px-16 lg:px-24 xl:px-32">
       <SlideInTitle text="Projects" />
-      <Container className="my-10 grid h-full grid-cols-1 gap-5 sm:grid-cols-1 md:grid-cols-2 xl:grid-cols-3">
-        {projects.map((project) => (
+      <Container className="my-10 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
+        {visibleProjects.map((project) => (
           <ProjectListing key={project.title} project={project} />
         ))}
       </Container>

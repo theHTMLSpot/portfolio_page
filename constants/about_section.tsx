@@ -4,8 +4,8 @@ import React from "react";
 
 export default function AboutSection() {
   return (
-     <Container className="m-10 grid grid-cols-1 xl:grid-cols-2 p-20 pb-40">
-      <Container className="flex h-full w-full flex-col items-start justify-center">
+    <Container className="xl:grid-cols-2px-4 m-10 grid grid-cols-1 p-0 py-16 pb-40 sm:px-10 md:p-20 lg:px-20">
+      <Container className="flex h-full w-full flex-col items-start justify-center sm:justify-start">
         <Title level={1} className="my-10 text-2xl font-black">
           Who Am I
         </Title>
@@ -29,13 +29,13 @@ export default function AboutSection() {
           Read More{" "}
         </Link>
       </Container>
-      <Container className="hidden xl:flex h-full w-full items-center justify-end">
+      <Container className="hidden h-full w-full items-center justify-end xl:flex">
         <Image
           src="/images/ethan.jpeg"
           alt="Ethan Lagden"
           width={500}
           height={500}
-          className="w-[50%] rounded-full hover:scale-105 transition-all duration-300 ease-in-out"
+          className="w-[50%] rounded-full transition-all duration-300 ease-in-out hover:scale-105"
           priority
           aria-hidden="true"
         />
