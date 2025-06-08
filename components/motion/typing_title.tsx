@@ -88,10 +88,7 @@ export default function TypingTitle({
       onMouseEnter={onMouseEnter}
       onMouseLeave={onMouseExit}
     >
-      <Title
-        level={1}
-        className="h-full text-4xl font-bold text-current sm:text-2xl md:text-5xl"
-      >
+      <Title level={1} className="h-full font-bold text-current">
         {displayedText}
         {cursor && <span className="ml-1 animate-pulse text-current">|</span>}
       </Title>
