@@ -5,6 +5,10 @@ export default function FooterSection() {
   return (
     <Container className="grid place-items-center border-t border-gray-600 bg-black p-10">
       <p>Copyright &copy; 2023</p>
+      <p>
+        Keyboard model from unknown.fbx sketchfab mouse model from arc98tect
+        sketchfab
+      </p>
       <Container className="grid w-screen grid-cols-2 place-items-center gap-4 bg-black p-10">
         <Container className="flex flex-col items-baseline gap-2">
           <Link href="https://www.youtube.com/">Youtube</Link>

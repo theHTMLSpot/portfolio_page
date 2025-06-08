@@ -8,256 +8,180 @@ import Lottie, { LottieRefCurrentProps } from "lottie-react";
 import contactAnimation from "@/animations/contact.json";
 
 import { motion } from "framer-motion";
+import ReCAPTCHA from "react-google-recaptcha";
 
 import FlyInTitle from "@/components/motion/fly_in_title";
 import ShakeOnError from "@/components/motion/shake_on_error";
 
-function formatLabel(key: string): string {
-  return key
-    .replace(/([A-Z])/g, " $1") // Insert space before uppercase letters
-    .replace(/^./, (str) => str.toUpperCase()); // Capitalize the first character
-}
+const SITE_KEY = process.env.NEXT_PUBLIC_RECAPTCHA_SITE_KEY!;
 
-export default function ContactPage() {
-  const lottieRef = useRef<LottieRefCurrentProps>(null);
+const formatLabel = (key: string): string =>
+  key.replace(/([A-Z])/g, " $1").replace(/^./, (str) => str.toUpperCase());
+
+const defaultFormData: contactForm = {
+  firstName: "",
+  lastName: "",
+  email: "",
+  subject: "",
+  message: "",
+};
+
+const ContactPage = () => {
+  const [formData, setFormData] = useState<contactForm>(defaultFormData);
+  const [formErrors, setFormErrors] = useState<contactForm>(defaultFormData);
   const [showAnim, setShowAnim] = useState(false);
   const [thankYouMode, setThankYouMode] = useState(false);
 
-  const message = [
-    "T",
-    "h",
-    "a",
-    "n",
-    "k",
-    "s",
-    " ",
-    "f",
-    "o",
-    "r",
-    " ",
-    "t",
-    "h",
-    "e",
-    " ",
-    "m",
-    "e",
-    "s",
-    "s",
-    "a",
-    "g",
-    "e",
-    "!",
-  ];
+  const lottieRef = useRef<LottieRefCurrentProps>(null);
+  const recaptchaRef = useRef<ReCAPTCHA>(null);
 
-  const [formData, setFormData] = useState<contactForm>({
-    firstName: "",
-    lastName: "",
-    email: "",
-    subject: "",
-    message: "",
-  });
+  const thankYouMessage = "Thanks for the message!".split("");
 
-  const [formErrors, setFormErrors] = useState<contactForm>({
-    firstName: "",
-    lastName: "",
-    email: "",
-    subject: "",
-    message: "",
-  });
+  useEffect(() => {
+    lottieRef.current?.animationItem?.goToAndStop(0, true);
+  }, []);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
+    setFormData((prev) => ({ ...prev, [name]: value }));
 
-    if (value === "") {
-      setFormErrors({
-        ...formErrors,
-        [name]: `${formatLabel(name)} can't be blank`,
-      });
-    } else {
-      setFormErrors({
-        ...formErrors,
-        [name]: "",
-      });
-    }
-
-    setFormData({
-      ...formData,
-      [name]: value,
-    });
+    setFormErrors((prev) => ({
+      ...prev,
+      [name]: value ? "" : `${formatLabel(name)} can't be blank`,
+    }));
   };
 
-  const handleSubmit = (e: React.FormEvent<HTMLButtonElement>) => {
+  const validateForm = (): boolean => {
+    const newErrors: contactForm = {
+      firstName: formData.firstName ? "" : "First Name can't be blank",
+      lastName: formData.lastName ? "" : "Last Name can't be blank",
+      email: formData.email ? "" : "Email can't be blank",
+      subject: formData.subject ? "" : "Subject can't be blank",
+      message: formData.message ? "" : "Message can't be blank",
+    };
+
+    setFormErrors(newErrors);
+    return !Object.values(newErrors).some((error) => error);
+  };
+
+  const submitForm = async (token: string) => {
+    try {
+      const response = await fetch("/api/send-email", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          sender: `${formData.firstName} <${formData.email}>`,
+          subject: formData.subject,
+          body: formData.message,
+          captchaToken: token,
+        }),
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(data.error || "Something went wrong.");
+      }
+
+      setFormData(defaultFormData);
+      setThankYouMode(true);
+    } catch (err) {
+      console.error("Form submission error:", err);
+    }
+  };
+
+  const handleSubmit = async (e: React.FormEvent<HTMLButtonElement>) => {
     e.preventDefault();
 
-    if (lottieRef.current?.animationItem) {
-      const newErrors: contactForm = {
-        firstName: "",
-        lastName: "",
-        email: "",
-        subject: "",
-        message: "",
-      };
+    if (!validateForm()) return;
 
-      let hasErrors = false;
+    setShowAnim(true);
+    const anim = lottieRef.current?.animationItem;
+    anim?.play();
 
-      for (const key in formData) {
-        if (formData[key as keyof contactForm].trim() === "") {
-          const label = formatLabel(key);
-          newErrors[key as keyof contactForm] = `${label} can't be blank`;
-          hasErrors = true;
+    const onAnimationComplete = async () => {
+      try {
+        const token = await recaptchaRef.current?.executeAsync();
+        recaptchaRef.current?.reset();
+
+        if (!token) {
+          throw new Error("ReCAPTCHA token missing.");
         }
-      }
 
-      if (hasErrors) {
-        setFormErrors(newErrors);
-        return; // Exit early if there are validation errors
-      }
-      setShowAnim(true);
-      const anim = lottieRef.current.animationItem;
-
-      anim.play();
-
-      const onComplete = () => {
-        setThankYouMode(true);
-
-        // TODO: add api endpoint to send message with resend.
-
-        console.log(formData);
-
-        setFormData({
-          firstName: "",
-          lastName: "",
-          email: "",
-          subject: "",
-          message: "",
-        });
-
+        await submitForm(token);
+      } catch (error) {
+        console.error("ReCAPTCHA validation failed:", error);
+      } finally {
         setShowAnim(false);
+        anim?.removeEventListener("complete", onAnimationComplete);
+      }
+    };
 
-        anim.removeEventListener("complete", onComplete);
-      };
-
-      anim.addEventListener("complete", onComplete);
-    }
+    anim?.addEventListener("complete", onAnimationComplete);
   };
 
-  useEffect(() => {
-    if (lottieRef.current?.animationItem) {
-      lottieRef.current.animationItem.goToAndStop(0, true);
-    }
-  }, []);
+  const renderField = (name: keyof contactForm, type: string = "text") => (
+    <div className="w-full">
+      <ShakeOnError trigger={!!formErrors[name]}>
+        <InputWithHoverLabel
+          name={name}
+          label={formatLabel(name)}
+          type={type}
+          value={formData[name]}
+          onChange={handleChange}
+        />
+      </ShakeOnError>
+      {formErrors[name] && (
+        <span className="text-red-700">{formErrors[name]}</span>
+      )}
+    </div>
+  );
 
   return (
     <Container className="my-40 flex w-screen flex-col items-center justify-center">
       <Container className="flex w-full flex-col items-center justify-center">
         <form className="flex flex-col gap-6 rounded-2xl bg-gray-900 p-20">
           <FlyInTitle text="Get in touch" />
-          <Container className="flex gap-2">
-            <div className="h-[50%] w-full">
-              <ShakeOnError trigger={!!formErrors.firstName}>
-                <InputWithHoverLabel
-                  name="firstName"
-                  label="First Name"
-                  type="text"
-                  value={formData.firstName}
-                  onChange={handleChange}
-                />
-              </ShakeOnError>
-              {formErrors.firstName && (
-                <span className="max-h-fit text-red-700">
-                  {formErrors.firstName}
-                </span>
-              )}
-            </div>
 
-            <div className="h-[50%] w-full">
-              <ShakeOnError trigger={!!formErrors.lastName}>
-                <InputWithHoverLabel
-                  name="lastName"
-                  label="Last Name"
-                  type="text"
-                  value={formData.lastName}
-                  onChange={handleChange}
-                />
-              </ShakeOnError>
-              {formErrors.lastName && (
-                <span className="max-h-fit text-red-700">
-                  {formErrors.lastName}
-                </span>
-              )}
-            </div>
+          <Container className="flex gap-2">
+            {renderField("firstName")}
+            {renderField("lastName")}
           </Container>
 
-          <ShakeOnError trigger={!!formErrors.email}>
-            <InputWithHoverLabel
-              name="email"
-              label="Email"
-              type="email"
-              value={formData.email}
-              onChange={handleChange}
-            />
-          </ShakeOnError>
-          {formErrors.email && (
-            <span className="max-h-fit text-red-700">{formErrors.email}</span>
-          )}
+          {renderField("email", "email")}
+          {renderField("subject")}
+          {renderField("message")}
 
-          <ShakeOnError trigger={!!formErrors.subject}>
-            <InputWithHoverLabel
-              name="subject"
-              label="Subject"
-              type="text"
-              value={formData.subject}
-              onChange={handleChange}
-            />
-          </ShakeOnError>
-          {formErrors.subject && (
-            <span className="max-h-fit text-red-700">{formErrors.subject}</span>
-          )}
-
-          <ShakeOnError trigger={!!formErrors.message}>
-            <InputWithHoverLabel
-              name="message"
-              label="Message"
-              type="text"
-              value={formData.message}
-              onChange={handleChange}
-            />
-          </ShakeOnError>
-          {formErrors.message && (
-            <span className="max-h-fit text-red-700">{formErrors.message}</span>
-          )}
-
-          <div className="h-fit w-full overflow-hidden">
+          <div className="w-full overflow-hidden">
             <motion.div
               initial={{ translateY: 300 }}
               animate={{ translateY: 0 }}
               transition={{ duration: 0.5, delay: 0.1 }}
-              className="h-full w-full"
+              className="w-full"
             >
               <button
                 type="submit"
-                className="text-foreground easeInOut relative my-5 h-auto w-full rounded-md bg-teal-500 py-5 text-xl transition-all duration-300 hover:-translate-y-2 hover:bg-teal-600"
+                className="relative my-5 w-full rounded-md bg-teal-500 py-5 text-xl transition-all duration-300 hover:-translate-y-2 hover:bg-teal-600"
                 onClick={handleSubmit}
-                id="submit"
+                disabled={thankYouMode}
               >
-                {!thankYouMode && "Submit"}
-                {thankYouMode && (
-                  <p className="flex w-full items-center justify-center gap-0 text-center">
-                    {message.map((char, i) =>
+                {thankYouMode ? (
+                  <p className="flex justify-center gap-0">
+                    {thankYouMessage.map((char, i) =>
                       char === " " ? (
                         <span key={i} className="w-2" />
                       ) : (
                         <motion.span
                           key={i}
-                          className="text-foreground inline-block"
+                          className="inline-block"
                           animate={{
-                            y: [0, -6, 6, 0], // smoother bounce motion
-                            opacity: [1, 0.8, 1], // subtle flicker
+                            y: [0, -6, 6, 0],
+                            opacity: [1, 0.8, 1],
                           }}
                           transition={{
                             duration: 0.5,
-                            delay: i * 0.05, // staggered timing per character
-                            ease: [0.42, 0, 0.58, 1], // easeInOutCubic
+                            delay: i * 0.05,
+                            ease: [0.42, 0, 0.58, 1],
                           }}
                         >
                           {char}
@@ -265,10 +189,12 @@ export default function ContactPage() {
                       ),
                     )}
                   </p>
+                ) : (
+                  "Submit"
                 )}
+
                 <Lottie
                   lottieRef={lottieRef}
-                  className="absolute right-5 bottom-2"
                   animationData={contactAnimation}
                   loop={false}
                   autoplay={false}
@@ -277,12 +203,17 @@ export default function ContactPage() {
                       ? { height: 78, width: 79 }
                       : { height: 0, width: 0 }
                   }
+                  className="absolute right-5 bottom-2"
                 />
               </button>
             </motion.div>
           </div>
+
+          <ReCAPTCHA sitekey={SITE_KEY} ref={recaptchaRef} size="invisible" />
         </form>
       </Container>
     </Container>
   );
-}
+};
+
+export default ContactPage;
