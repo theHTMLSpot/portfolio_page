@@ -31,6 +31,7 @@ const ContactPage = () => {
   const [formErrors, setFormErrors] = useState<contactForm>(defaultFormData);
   const [showAnim, setShowAnim] = useState(false);
   const [thankYouMode, setThankYouMode] = useState(false);
+  const [pending, setPending] = useState(false);
 
   const lottieRef = useRef<LottieRefCurrentProps>(null);
   const recaptchaRef = useRef<ReCAPTCHA>(null);
@@ -96,8 +97,10 @@ const ContactPage = () => {
     if (!validateForm()) return;
 
     setShowAnim(true);
+    setPending(true);
     const anim = lottieRef.current?.animationItem;
     anim?.play();
+
 
     const onAnimationComplete = async () => {
       try {
@@ -113,6 +116,7 @@ const ContactPage = () => {
         console.error("ReCAPTCHA validation failed:", error);
       } finally {
         setShowAnim(false);
+        setPending(false);
         anim?.removeEventListener("complete", onAnimationComplete);
       }
     };
@@ -165,7 +169,7 @@ const ContactPage = () => {
                 onClick={handleSubmit}
                 disabled={thankYouMode}
               >
-                {thankYouMode ? (
+                {thankYouMode && !pending ? (
                   <p className="flex justify-center gap-0">
                     {thankYouMessage.map((char, i) =>
                       char === " " ? (
@@ -189,6 +193,8 @@ const ContactPage = () => {
                       ),
                     )}
                   </p>
+                ) : pending && !thankYouMode ? (
+                  "Sending..."
                 ) : (
                   "Submit"
                 )}
