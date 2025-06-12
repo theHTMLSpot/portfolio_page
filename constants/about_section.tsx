@@ -1,4 +1,5 @@
 import { Container, Paragraph, Title, Link } from "@/components/components";
+import ResumeDownloadButton from "@/components/resume_download";
 import Image from "next/image";
 import React from "react";
 
@@ -29,12 +30,10 @@ export default function AboutSection() {
           collaborate and build something great together.
         </Paragraph>
 
-        <Link
-          href="/about"
-          className="text-foreground hover:text-primary underline transition-colors"
-        >
-          Read More
-        </Link>
+        <Container className="flex gap-4">
+          <Link href="/about">Read More</Link>
+          <ResumeDownloadButton />
+        </Container>
       </Container>
 
       {/* Image Content */}

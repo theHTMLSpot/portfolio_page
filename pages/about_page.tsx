@@ -2,11 +2,12 @@
 
 import { Container, Paragraph } from "@/components/components";
 import TypingTitle from "@/components/motion/typing_title";
+import ResumeDownloadButton from "@/components/resume_download";
 import Image from "next/image";
 
 export default function AboutPage() {
   return (
-    <Container className="m-10 grid grid-cols-1 gap-10 p-6 sm:px-10 md:grid-cols-2 md:p-20 lg:px-20 xl:gap-20">
+    <Container className="m-10 grid grid-cols-1 gap-10 p-6 pt-20 sm:px-10 md:grid-cols-2 md:p-20 lg:px-20 xl:gap-20">
       {/* Text Content */}
       <Container className="flex flex-col justify-center">
         <TypingTitle
@@ -82,6 +83,7 @@ export default function AboutPage() {
           <br />I{""}m excited to keep learning, building, and growing — and I
           hope you enjoyed reading my story!
         </Paragraph>
+        <ResumeDownloadButton />
       </Container>
 
       {/* Image */}

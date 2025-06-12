@@ -7,7 +7,7 @@ import { motion } from "framer-motion";
 
 export default function ProjectListing({ project }: { project: project }) {
   return (
-    <Container className="m-0 flex w-full flex-col items-start justify-between rounded-xl border border-gray-500 p-10">
+    <Container className="m-0 flex w-full flex-col items-start justify-between rounded-xl border border-gray-500 p-10 py-20">
       <motion.div
         initial={{ scale: 0.8 }}
         animate={{ scale: 1 }}

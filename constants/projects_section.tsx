@@ -29,7 +29,7 @@ export default function ProjectsSection({ howMany }: { howMany?: string }) {
   const visibleProjects = projects.slice(0, projectCount);
 
   return (
-    <Container className="w-full px-4 py-16 sm:px-10 md:px-16 lg:px-24 xl:px-32">
+    <Container className="w-full px-4 py-16 pt-30 sm:px-10 md:px-16 lg:px-24 xl:px-32">
       <SlideInTitle text="Projects" />
       <Container className="my-10 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3">
         {visibleProjects.map((project) => (

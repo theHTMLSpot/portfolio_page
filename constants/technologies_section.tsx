@@ -138,7 +138,7 @@ export default function TechnologiesSection({
         { title: "Backend", techs: backendTechs },
         { title: "Other", techs: otherTechs },
       ].map(({ title, techs }) => (
-        <Container key={title} className="flex w-full flex-col gap-6">
+        <Container key={title} className="flex w-full flex-col gap-6 py-10">
           <h2
             className="w-fit cursor-pointer text-2xl font-medium text-teal-100 transition-all duration-300 hover:text-teal-200"
             onMouseEnter={() => setHovering(title)}
