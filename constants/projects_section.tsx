@@ -33,10 +33,10 @@ export default function ProjectsSection({ howMany }: { howMany?: string }) {
     <Container className="w-full px-4 py-16 pt-30 sm:px-10 md:px-16 lg:px-24 xl:px-32">
       <SlideInTitle text="Projects" />
       <motion.div
-        initial={{ scale: 0 }}
-        whileInView={{ scale: 1 }}
-        viewport={{ once: true, amount: 0.2 }}
-        transition={{ duration: 0.5, delay: 0.5 }}
+        initial={{ scale: 0.95, opacity: 0 }}
+        whileInView={{ scale: 1, opacity: 1 }}
+        viewport={{ once: true, margin: "-200px", amount: 0.1 }}
+        transition={{ duration: 0.6, ease: "easeOut", delay: 0.3 }}
         className="my-10 grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-3"
       >
         {visibleProjects.map((project) => (
