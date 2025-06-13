@@ -1,11 +1,26 @@
+"use client";
+
 import { Container, Paragraph, Title, Link } from "@/components/components";
 import ResumeDownloadButton from "@/components/resume_download";
 import Image from "next/image";
-import React from "react";
+import React, { useRef } from "react";
+import { motion, useInView } from "framer-motion";
 
 export default function AboutSection() {
+  const ref = useRef(null);
+  const isInView = useInView(ref, { once: true, margin: "-100px" });
+
   return (
-    <Container className="m-10 grid grid-cols-1 gap-10 p-6 sm:p-10 md:grid-cols-2 md:gap-16 lg:p-20 xl:gap-20">
+    <motion.div
+      ref={ref}
+      initial={{ paddingLeft: "0px", paddingRight: "0px" }}
+      animate={{
+        paddingLeft: isInView ? "2.5rem" : "0rem",
+        paddingRight: isInView ? "2.5rem" : "0rem",
+      }} // Adjust for sm:p-10
+      transition={{ duration: 0.6, ease: "easeInOut" }}
+      className="m-10 grid grid-cols-1 gap-10 sm:p-10 md:grid-cols-2 md:gap-16 lg:p-20 xl:gap-20"
+    >
       {/* Text Content */}
       <Container className="flex flex-col justify-center">
         <Title level={1} className="mb-8 text-3xl font-black sm:text-4xl">
@@ -48,6 +63,6 @@ export default function AboutSection() {
           aria-hidden="true"
         />
       </Container>
-    </Container>
+    </motion.div>
   );
 }

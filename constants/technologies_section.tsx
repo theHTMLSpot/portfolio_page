@@ -5,6 +5,8 @@ import { Container, Link } from "@/components/components";
 import React, { useState } from "react";
 import SlideInFromCenter from "@/components/motion/slide_in_from_center";
 
+import { motion } from "motion/react";
+
 const frontendTechnologies: Record<string, string> = {
   React: "/icons/react.svg",
   "Next.js": "/icons/next.svg",
@@ -147,8 +149,23 @@ export default function TechnologiesSection({
             {title}
           </h2>
           <Container className="flex flex-wrap gap-10">
-            {Object.entries(techs).map(([name, src]) => (
-              <div
+            {Object.entries(techs).map(([name, src], index) => (
+              <motion.div
+                initial={{ translateY: 100, opacity: 0 }}
+                whileInView={{ translateY: 0, opacity: 1 }}
+                transition={{
+                  translateY: {
+                    duration: 0.5,
+                    delay: index * 0.2,
+                    ease: "easeInOut",
+                  },
+                  opacity: {
+                    duration: 0.5,
+                    delay: index !== 0 ? index * 0.5 : 0.5,
+                    ease: "easeInOut",
+                  },
+                }}
+                viewport={{ once: true, amount: 0.2 }}
                 key={name}
                 className={`relative flex h-45 w-40 cursor-pointer flex-col items-center justify-center gap-2 rounded-md border border-teal-950 bg-gray-800 p-5 transition-all duration-300 hover:translate-y-[-1rem] hover:scale-110 hover:shadow-lg hover:shadow-teal-900/40 ${shouldBeHighlighted(name, title as any, hovering) ? "scale-110" : shouldBeDeemphasized(name, title as any, hovering) ? "scale-90" : "scale-100"}`}
                 onMouseEnter={() => setVisibleTooltip(name)}
@@ -164,7 +181,7 @@ export default function TechnologiesSection({
                   <Image src={src} alt={name} width={50} height={50} />
                 </Container>
                 <span className="text-foreground text-sm">{name}</span>
-              </div>
+              </motion.div>
             ))}
           </Container>
         </Container>

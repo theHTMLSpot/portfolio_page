@@ -161,12 +161,21 @@ export default function HeroSection() {
           </div>
 
           <Paragraph>5+ years of programming experience.</Paragraph>
-          <button
-            onClick={() => router.push("/contact")}
-            className="text-foreground easeInOut text-md relative my-5 h-auto w-fit rounded-md bg-teal-500 px-30 py-5 whitespace-nowrap transition-all duration-300 hover:-translate-y-2 hover:bg-teal-600"
-          >
-            Contact Me
-          </button>
+          <Container className="overflow-hidden">
+            <motion.div
+              initial={{ x: -350 }}
+              animate={{ x: 0 }}
+              transition={{ duration: 0.5, delay: 1, ease: "easeInOut" }}
+              className=""
+            >
+              <button
+                onClick={() => router.push("/contact")}
+                className="text-foreground easeInOut text-md relative my-5 h-auto w-fit rounded-md bg-teal-500 px-30 py-5 whitespace-nowrap transition-all duration-300 hover:-translate-y-2 hover:bg-teal-600"
+              >
+                Contact Me
+              </button>
+            </motion.div>
+          </Container>
         </Container>
       </Container>
     </>

@@ -101,7 +101,6 @@ const ContactPage = () => {
     const anim = lottieRef.current?.animationItem;
     anim?.play();
 
-
     const onAnimationComplete = async () => {
       try {
         const token = await recaptchaRef.current?.executeAsync();
@@ -156,11 +155,16 @@ const ContactPage = () => {
           {renderField("subject")}
           {renderField("message")}
 
-          <div className="w-full overflow-hidden">
+          <div className="w-full">
             <motion.div
-              initial={{ translateY: 300 }}
-              animate={{ translateY: 0 }}
-              transition={{ duration: 0.5, delay: 0.1 }}
+              initial={{ translateY: 300, opacity: 0 }}
+              whileInView={{ translateY: 0, opacity: 1 }}
+              transition={{
+                translateY: { delay: 0.1 },
+                opacity: { delay: 0.1 },
+                duration: 0.7,
+              }}
+              viewport={{ once: true, margin: "300px" }}
               className="w-full"
             >
               <button
