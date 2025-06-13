@@ -161,10 +161,10 @@ export default function HeroSection() {
           </div>
 
           <Paragraph>5+ years of programming experience.</Paragraph>
-          <Container className="overflow-hidden">
+          <Container>
             <motion.div
-              initial={{ x: -350 }}
-              animate={{ x: 0 }}
+              initial={{ x: -350, opacity: 0 }}
+              animate={{ x: 0, opacity: 1 }}
               transition={{ duration: 0.5, delay: 1, ease: "easeInOut" }}
               className=""
             >
