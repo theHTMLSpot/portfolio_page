@@ -156,12 +156,12 @@ export default function TechnologiesSection({
                 transition={{
                   translateY: {
                     duration: 0.5,
-                    delay: index * 0.2,
+                    delay: index % 5 * 0.2,
                     ease: "easeInOut",
                   },
                   opacity: {
                     duration: 0.5,
-                    delay: index !== 0 ? index * 0.5 : 0.5,
+                    delay: index !== 0 ? index % 5 * 0.5 : 0.5,
                     ease: "easeInOut",
                   },
                 }}
