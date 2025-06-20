@@ -5,7 +5,7 @@ import TypingTitle from "@/components/motion/typing_title";
 import ResumeDownloadButton from "@/components/resume_download";
 import Image from "next/image";
 
-import { motion } from "motion/react"
+import { motion } from "motion/react";
 
 export default function AboutPage() {
   return (
@@ -89,13 +89,18 @@ export default function AboutPage() {
       </Container>
 
       {/* Image */}
-      <motion.div initial={{scale: 0}}  animate={{scale:1}} transition={{duration: 0.8, ease: "easeInOut"}} className="hidden justify-center h-fit md:flex">
+      <motion.div
+        initial={{ scale: 0 }}
+        animate={{ scale: 1 }}
+        transition={{ duration: 0.8, ease: "easeInOut" }}
+        className="hidden h-fit justify-center md:flex"
+      >
         <Image
-          src="/images/ethan.jpeg"
+          src="/images/ethan.jpg"
           alt="Portrait of Ethan Lagden"
           width={7000}
           height={7000}
-          className="w-1/2 aspect-auto rounded-full transition-transform duration-300 ease-in-out hover:scale-105"
+          className="aspect-auto w-1/2 rounded-full transition-transform duration-300 ease-in-out hover:scale-105"
           priority
           aria-hidden="true"
         />

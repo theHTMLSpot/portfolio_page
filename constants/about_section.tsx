@@ -52,13 +52,19 @@ export default function AboutSection() {
       </Container>
 
       {/* Image Content */}
-      <motion.div initial={{scale: 0}} viewport={{once: true, amount: 0.2 }}  whileInView={{scale:1}} transition={{duration: 0.8, ease: "easeInOut"}}  className="hidden items-center justify-center md:flex">
+      <motion.div
+        initial={{ scale: 0 }}
+        viewport={{ once: true, amount: 0.2 }}
+        whileInView={{ scale: 1 }}
+        transition={{ duration: 0.8, ease: "easeInOut" }}
+        className="hidden items-center justify-center md:flex"
+      >
         <Image
-          src="/images/ethan.jpeg"
+          src="/images/ethan.jpg"
           alt="Portrait of Ethan Lagden"
           width={500}
           height={500}
-          className="rounded-full w-1/2 aspect-square transition-transform duration-300 ease-in-out hover:scale-105"
+          className="aspect-square w-1/2 rounded-full transition-transform duration-300 ease-in-out hover:scale-105"
           priority
           aria-hidden="true"
         />
